@@ -1,0 +1,46 @@
+API endpoints — проверка и статус
+
+Что проверено:
+- Эндпойнты маршрутов в backend/src/routes/orders.routes.ts
+- Реализация контроллера в backend/src/controllers/order.controller.ts
+- Логика создания/получения заказов в backend/src/services/order.service.ts
+- Источник ставок налогов в backend/src/services/tax.service.ts
+- Репозиторий (in-memory) в backend/src/repositories/order.repository.ts
+- Точка входа и монтирование роутов в backend/src/app.ts
+
+Результат проверки — всё есть (изменения не требуются):
+
+1) Эндпойнты:
+- GET /orders — возвращает массив заказов (массив объектов)
+- POST /orders — принимает JSON body: latitude, longitude, subtotal (числа); возвращает созданный объект заказа
+- POST /orders/import — multipart/form-data с полем "file" (CSV); импортирует строки и возвращает сводку
+
+2) Формат выходных данных (примерные поля ответа):
+- Для одного заказа (созданного или в списке):
+  - id
+  - latitude
+  - longitude
+  - subtotal
+  - timestamp
+  - composite_tax_rate
+  - tax_amount
+  - total_amount
+
+- Для импорта CSV: JSON { created: number, createdItems: Array<order>, errors?: Array<string> }
+
+3) Замечания о реализации:
+- Налоговые ставки возвращаются фиксированными значениями в backend/src/services/tax.service.ts (мок).
+- Репозиторий хранит данные в памяти (массив), поэтому данные не сохраняются между перезапусками (backend/src/repositories/order.repository.ts).
+- CSV-поля обязательны: latitude, longitude, subtotal; timestamp опционален.
+
+Что сделано сейчас:
+- Проверил файлы и функциональность контроллеров/сервисов/маршрутов.
+- Ничего не нужно доделывать — эндпойнты и выходные данные реализованы.
+- Создан этот файл с результатами проверки (API_CHECK_SUMMARY.txt).
+
+Если хотите — могу:
+- Добавить в ответы пример JSON (пример объекта заказа).
+- Подключить реальное хранилище (например, SQLite) вместо in-memory.
+- Заменить мок налогов на вызов внешнего API.
+
+Дата проверки: 26.02.2026
